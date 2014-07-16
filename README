@@ -1,0 +1,97 @@
+this program prints information about whats going on in the teeworlds world.
+it will contact master- and game servers, print the requested information, 
+and then terminate. 
+hence, for a continous view, its best run in combination with watch, or in 
+the background writing to a file, with watch/tail as its front end.
+
+List of supported parameters: (slightly obsolete)
+
+  -v: increase verbosity
+
+  -f NUMBER: re-request serverlist if at least NUMBER of server short.
+    A server list provided by a master server can be incomplete,
+      due to the unrelieable nature of UDP, and also as an
+      implication of the way teeworlds master servers operate.
+    Without -f, any server list is accepted, regardless of whether
+      the number of received servers actually matches the amount
+      the master server claimed to have available.
+    With -f, if the size of the received server list contains at least 
+      NUMBER servers less than anounced, a new server list is requested
+    Reasonable values for -f start at around 10, lower values will
+      usually just slow things down without bringing in any noticable benefit
+    Note that the final server list may *still* be short, if we ran
+      out of attempts (see -R). However, in this case, the largest
+      serverlist acquired while attempting is used as the result, even if short
+
+  -c: enable bash color sequences
+  -i: case-insensitive regexps
+  -e: hide trailing statusmsg after output (e.g. 'end of player listing')
+
+  -se: do not display empty servers
+    By default, servers with one or more attributes matching
+      your proviced regular expressions, will be printed out.
+    This will prevent empty servers from being printed.
+
+  -sp: for matching servers, display who is playing on it 
+    This does not affect the player matching expression specified through -p.
+    
+  -l NUMBR: in combination with -sp, put NUMBER players on one line
+    By default, each player will be displayed on a new line.
+    Note that this is unrelated to the actual player matching.
+    
+  -S: print stats as last line
+  -ao do not truncate output file, i.e. append to it
+  -aO do not truncate raw output file, i.e. append to it
+
+  -O FILE: print raw (unfiltered) data to file (default: don't print raw)
+    The raw output will always contain every server and player,
+      but must be explicitely enabled by this option when desired.
+    Specify a file, or a dash ``-'' for stdout.
+
+  -o FILE: write output to FILE instead of stdout
+  
+  -m STRING: specify a comma-seperated list of master servers
+    For example: -m master3.teeworlds.com,example.org,127.0.0.1 
+    Note that there is no IPv6 support yet, neither here, nor in teeworlds.
+      
+  -N NUMBER: print as many newlines before outputting
+    This might be useful when running inside of some kind of loop-script.
+      
+  -r NUMBER: number of retries for unresponsive master servers
+  -R NUMBER: number of retries for unresponsive game servers
+  -T NUMBER: number of threads (default: 20)
+    Note that the master servers are always queried sequentially by
+      a single thread.
+     
+  -tm NUMBER: read timeout for master servers in seconds
+  -tg NUMBER: read timeout for game servers in seconds
+
+  ---- Matching ----
+
+  -p REGEXP: output all players with name matching REGEXP
+    When not specified, any player matches
+
+  -st REGEXP: output all servers with type matching REGEXP
+  -sn REGEXP: output all servers with name matching REGEXP
+  -sa REGEXP: output all servers with host:port matching REGEXP
+  -sm REGEXP: output all servers with map matching REGEXP
+  -sv REGEXP: output all servers with version matching REGEXP
+    A server matches when at least one attribute matches the given
+      expression. A missing expression will never match (unlike
+      player matching). Hence, if none of the above arguments
+      are specified, no server is printed out at all
+
+  -h : display usage information statement
+
+
+if you want to see whats going on (to make sure its not stuck), call 
+  it with -v, or even with -v -v
+
+
+regards, 
+
+fisted (http://github.com/fisted)
+
+
+
+
